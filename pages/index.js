@@ -6,7 +6,7 @@ import Widgets from '@/components/Widgets';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function Home() {
+export default function Home({ newsResults }) {
     return (
         <>
             <Head>
@@ -21,17 +21,29 @@ export default function Home() {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
-            <main className="flex min-h-screen max-w-7xl mx-auto">
+            <main className="flex min-h-screen mx-auto">
                 {/* Sidebar */}
                 <Sidebar />
 
                 {/* Feed */}
                 <Feed />
                 {/* Widgets */}
-                <Widgets />
+                <Widgets newsResults={newsResults.articles} />
 
                 {/* Modal */}
             </main>
         </>
     );
+}
+
+//https://saurav.tech/NewsAPI/top-headlines/category/health/in.json
+export async function getServerSideProps() {
+    const newsResults = await fetch(
+        'https://saurav.tech/NewsAPI/top-headlines/category/health/in.json',
+    ).then((res) => res.json());
+    return {
+        props: {
+            newsResults,
+        },
+    };
 }
