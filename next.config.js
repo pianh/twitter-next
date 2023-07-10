@@ -7,6 +7,7 @@ const nextConfig = {
             'kenh14cdn.com',
             'plus.unsplash.com',
             'images.unsplash.com',
+            'lh3.googleusercontent.com',
         ],
     },
 };
