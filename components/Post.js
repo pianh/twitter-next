@@ -1,4 +1,5 @@
-//20:28
+import { db } from '@/firebase';
+import { useSession } from 'next-auth/react';
 import {
     ChartBarIcon,
     ChatBubbleOvalLeftEllipsisIcon,
@@ -6,11 +7,37 @@ import {
     ShareIcon,
     TrashIcon,
 } from '@heroicons/react/24/outline';
+import { HeartIconn as HeartIconnFilled } from '@heroicons/react/24/solid';
+import { collection, doc, onSnapshot, setDoc } from 'firebase/firestore';
 
 import Image from 'next/image';
 import Moment from 'react-moment';
+import { useEffect, useState } from 'react';
 
 export default function Post({ post }) {
+    const { data: session } = useSession();
+    const [likes, setLikes] = useState([]);
+    const [hasLiked, setHasLiked] = useState(false);
+
+    useEffect(() => {
+        const unsubscibe = onSnapshot(
+            collection(db, 'posts', post.id, 'like'),
+            (snapshot) => setLikes(snapshot.docs),
+        );
+    }, [db]);
+
+    useEffect(() => {
+        setHasLiked(
+            likes.findIndex((like) => like.id === session.user.uid) !== -1,
+        );
+    }, [likes]);
+
+    async function likePost() {
+        await setDoc(doc(db, 'posts', post.id, 'likes', session.user.uid), {
+            username: session.user.username,
+        });
+    }
+
     return (
         <div className="flex p-3 cursor-pointer">
             {/* user Image */}
@@ -37,7 +64,9 @@ export default function Post({ post }) {
                         </span>
 
                         <span className="text-sm sm:text-[15px] hover:underline">
-                            <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
+                            <Moment fromNow>
+                                {post?.data().timestamp?.toDate()}
+                            </Moment>
                         </span>
                     </div>
                     {/* dot icon  */}
@@ -65,8 +94,19 @@ export default function Post({ post }) {
                 {/* icons */}
                 <div className="flex mt-2 justify-between text-gray-500 p-2">
                     <ChatBubbleOvalLeftEllipsisIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
-                    <TrashIcon className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100" />
-                    <HeartIcon className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100" />
+                    <TrashIcon className="h-9 w-9 hoverEffect p-2 text-red-600 hover:bg-red-100" />
+                    {hasLiked ? (
+                        <HeartIconnFilled
+                            onClick={likePost}
+                            className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"
+                        />
+                    ) : (
+                        <HeartIcon
+                            onClick={likePost}
+                            className="h-9 w-9 hoverEffect p-2 hover:text-red-600 hover:bg-red-100"
+                        />
+                    )}
+
                     <ShareIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
                     <ChartBarIcon className="h-9 w-9 hoverEffect p-2 hover:text-sky-500 hover:bg-sky-100" />
                 </div>
