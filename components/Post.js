@@ -8,13 +8,14 @@ import {
 } from '@heroicons/react/24/outline';
 
 import Image from 'next/image';
+import Moment from 'react-moment';
 
 export default function Post({ post }) {
     return (
         <div className="flex p-3 cursor-pointer">
             {/* user Image */}
             <Image
-                src="/assets/images/avatar.jpg"
+                src={post.data().userImg}
                 alt="user-img"
                 width={40}
                 height={40}
@@ -29,14 +30,14 @@ export default function Post({ post }) {
                     <div className="flex items-center space-x-1 whitespace-nowrap">
                         {/* post user info */}
                         <h4 className="font-bold text-[15px] sm:text-[16px] hover:underline">
-                            {post.name}
+                            {post.data().name}
                         </h4>
                         <span className="text-sm sm:text-[15px]">
-                            @{post.username} -
+                            @{post.data().username} -
                         </span>
 
                         <span className="text-sm sm:text-[15px] hover:underline">
-                            {post.timestamp}
+                            <Moment fromNow>{post?.timestamp?.toDate()}</Moment>
                         </span>
                     </div>
                     {/* dot icon  */}
@@ -49,13 +50,13 @@ export default function Post({ post }) {
 
                 {/* Post tets */}
                 <p className="text-gray-800 text-[15px] sm:text-[16px] mb-2">
-                    {post.text}
+                    {post.data().text}
                 </p>
 
                 {/* post image */}
                 <Image
                     className="rounded-2xl mr-2"
-                    src={post.img}
+                    src={post.data().image}
                     width={800}
                     height={100}
                     alt=""

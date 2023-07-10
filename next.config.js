@@ -4,7 +4,7 @@ const nextConfig = {
     images: {
         domains: [
             'upload.wikimedia.org',
-            'kenh14cdn.com',
+            'firebasestorage.googleapis.com',
             'plus.unsplash.com',
             'images.unsplash.com',
             'lh3.googleusercontent.com',
