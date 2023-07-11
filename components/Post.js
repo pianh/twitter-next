@@ -61,7 +61,9 @@ export default function Post({ post }) {
     async function deletePost() {
         if (window.confirm('Are you sure you want to delete this post?')) {
             deleteDoc(doc(db, 'posts', post.id));
-            deleteObject(ref(storage, `posts/${post.id}/image`));
+            if (post.data().image) {
+                deleteObject(ref(storage, `posts/${post.id}/image`));
+            }
         }
     }
 
@@ -110,11 +112,10 @@ export default function Post({ post }) {
                 </p>
 
                 {/* post image */}
-                <Image
+                <img
+                    // onClick={() => router.push(`/posts/${id}`)}
                     className="rounded-2xl mr-2"
-                    src={post.data().image}
-                    width={800}
-                    height={100}
+                    src={post?.data()?.image}
                     alt=""
                 />
 
