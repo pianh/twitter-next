@@ -1,5 +1,5 @@
 import { db, storage } from '@/firebase';
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import {
     ChartBarIcon,
     ChatBubbleOvalLeftEllipsisIcon,
